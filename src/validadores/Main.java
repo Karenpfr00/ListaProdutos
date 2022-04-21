@@ -1,6 +1,7 @@
 package models;
 
 import DB.EstoquesDB;
+import DB.PedidosVendaDB;
 import DB.ProdutosDB;
 import DB.UsuariosDB;
 
@@ -14,6 +15,7 @@ public class Main {
     static ProdutosDB produtosDB = new ProdutosDB();
     static UsuariosDB usuariosDB = new UsuariosDB();
     static EstoquesDB estoquesDB = new EstoquesDB();
+    static PedidosVendaDB pedidosVendaDB = new PedidosVendaDB();
 
     public static void main(String[] args) throws Exception {
         System.out.println("---Pedido de Vendas ---");
@@ -28,6 +30,8 @@ public class Main {
             System.out.println("5 - Listar todos os usuários");
             System.out.println("6 - Cadastrar novo estoque de produtos");
             System.out.println("7 - Listar todos os estoques");
+            System.out.println("8 - Criar pedido de venda");
+            System.out.println("9 - Listar pedidos de venda");
             System.out.println("0 - Sair");
 
             Scanner scanner = new Scanner(System.in);
@@ -146,6 +150,46 @@ public class Main {
                     System.out.println("PRODUTO: " + estoque.getProduto().getDescricao());
                     System.out.println("PREÇO: " + estoque.getProduto().getPreço());
                     System.out.println("QUANTIDADE: " + estoque.getQuantidade());
+                    System.out.println("----------------------------------------");
+                }
+                break;
+            }
+
+            case 8: {
+                Scanner sc = new Scanner(System.in);
+
+                System.out.println("Informe o ID do cliente: ");
+                int idCliente = sc.nextInt();
+                Cliente cliente = (Cliente) usuariosDB.getUsuarioPorID(idCliente);
+                System.out.println("ID: " + cliente.getId());
+                System.out.println("NOME: " + cliente.getNome());
+                System.out.println("TIPO: " + cliente.getTipoUsuario());
+                System.out.println("----------------------------------------");
+
+                System.out.println("Informe o Identificador do Estoque: ");
+                String idEstoque = sc.next();
+                Estoque estoque =  estoquesDB .getEstoqueById(idEstoque);
+                System.out.println("ESTOQUE ID:" + estoque.getId());
+                System.out.println("PRODUTO DESCRIÇÃO: " + estoque.getProduto().getDescricao());
+                System.out.println("PRODUTO VALIDADE: " + estoque.getProduto().getDataValidade());
+                System.out.println("-----------------------------------------------");
+
+                System.out.println("Infome a quantidade a ser vendida: ");
+                int quantidade = sc.nextInt();
+
+                PedidoVenda novoPedido = new PedidoVenda(cliente,estoque,quantidade);
+                pedidosVendaDB.addNovoPedidoVenda(novoPedido);
+                break;
+            }
+            case 9: {  System.out.println("----------------------------------------");
+                System.out.println("-----LISTANDO PEDIDOS DE VENDA-----------------");
+                System.out.println("----------------------------------------");
+                for (PedidoVenda pedidoVenda: pedidosVendaDB.getPedidoVendas()) {
+                    System.out.println("ID: " + pedidoVenda.getId());
+                    System.out.println("CLIENTE: " + pedidoVenda.getCliente().getNome());
+                    System.out.println("PRODUTO: " + pedidoVenda.getEstoque().getProduto().getDescricao());
+                    System.out.println("QUANTIDADE: " + pedidoVenda.getQuantidade());
+                   // System.out.println("VALOR TOTAL: R$ "+ pedidoVenda.getValorTotal());
                     System.out.println("----------------------------------------");
                 }
                 break;
