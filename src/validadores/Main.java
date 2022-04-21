@@ -1,11 +1,12 @@
-package models;
+package validadores;
 
 import DB.EstoquesDB;
 import DB.PedidosVendaDB;
 import DB.ProdutosDB;
 import DB.UsuariosDB;
+import models.*;
+import validadores.ValidadorPedidoVenda;
 
-import java.sql.SQLOutput;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -178,7 +179,14 @@ public class Main {
                 int quantidade = sc.nextInt();
 
                 PedidoVenda novoPedido = new PedidoVenda(cliente,estoque,quantidade);
-                pedidosVendaDB.addNovoPedidoVenda(novoPedido);
+
+                ValidadorPedidoVenda validadorPedidoVenda = new ValidadorPedidoVenda(novoPedido);
+
+                if(validadorPedidoVenda.ehValido()) {
+                    pedidosVendaDB.addNovoPedidoVenda(novoPedido);
+                } else {
+                    System.out.println(validadorPedidoVenda.getErros());
+                }
                 break;
             }
             case 9: {  System.out.println("----------------------------------------");
